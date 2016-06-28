@@ -1,6 +1,6 @@
 # This file is a part of Julia. License is MIT: http://julialang.org/license
 
-using Base.Test
+@testset "special" begin
 debug = false
 
 n= 10 #Size of matrix to test
@@ -165,4 +165,5 @@ let
             @test issparse(cat((1,2), othermatorvec, specialmat))
         end
     end
+end
 end
