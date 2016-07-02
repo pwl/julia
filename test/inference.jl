@@ -1,6 +1,5 @@
 # This file is a part of Julia. License is MIT: http://julialang.org/license
 
-@testset "inference" begin
 # tests for Core.Inference correctness and precision
 
 # issue 9770
@@ -337,5 +336,4 @@ setabc18015!(tri, a, b, c) = (tri.a = a; tri.b = b; tri.c = c)
 let tri = Triple18015(1, 2, 3)
     setabc18015!(tri, b18015(tri), c18015(tri), a18015(tri))
     @test tri.a === 2 && tri.b === 3 && tri.c === 1
-end
 end
