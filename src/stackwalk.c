@@ -372,7 +372,7 @@ JL_DLLEXPORT jl_value_t *jl_lookup_code_address(void *ip, int skipC)
         jl_svecset(r, 3, frame.linfo != NULL ? (jl_value_t*)frame.linfo : jl_nothing);
         jl_svecset(r, 4, jl_box_bool(frame.fromC));
         jl_svecset(r, 5, jl_box_bool(frame.inlined));
-        jl_svecset(r, 6, jl_box_long((intptr_t)ip));
+        jl_svecset(r, 6, jl_box_voidpointer(ip));
     }
     free(frames);
     JL_GC_POP();
