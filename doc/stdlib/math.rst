@@ -103,13 +103,13 @@ Mathematical Operators
 
    .. Docstring generated from Julia source
 
-   Computes ``x*y+z`` without rounding the intermediate result ``x*y``\ . On some systems this is significantly more expensive than ``x*y+z``\ . ``fma`` is used to improve accuracy in certain algorithms. See ``muladd``\ .
+   Computes ``x*y+z`` without rounding the intermediate result ``x*y``\ . On some systems this is significantly more expensive than ``x*y+z``\ . ``fma`` is used to improve accuracy in certain algorithms. See :func:`muladd`\ .
 
 .. function:: muladd(x, y, z)
 
    .. Docstring generated from Julia source
 
-   Combined multiply-add, computes ``x*y+z`` in an efficient manner. This may on some systems be equivalent to ``x*y+z``\ , or to ``fma(x,y,z)``\ . ``muladd`` is used to improve performance. See ``fma``\ .
+   Combined multiply-add, computes ``x*y+z`` in an efficient manner. This may on some systems be equivalent to ``x*y+z``\ , or to ``fma(x,y,z)``\ . ``muladd`` is used to improve performance. See :func:`fma`\ .
 
 .. function:: div(x, y)
               ÷(x, y)
@@ -123,6 +123,11 @@ Mathematical Operators
    .. Docstring generated from Julia source
 
    Largest integer less than or equal to ``x/y``\ .
+
+   .. doctest::
+
+       julia> fld(7.3,5.5)
+       1.0
 
 .. function:: cld(x, y)
 
@@ -148,6 +153,11 @@ Mathematical Operators
 
    This function computes a floating point representation of the modulus after division by numerically exact ``2π``\ , and is therefore not exactly the same as ``mod(x,2π)``\ , which would compute the modulus of ``x`` relative to division by the floating-point number ``2π``\ .
 
+   .. doctest::
+
+       julia> mod2pi(9*pi/4)
+       0.7853981633974481
+
 .. function:: rem(x, y)
               %(x, y)
 
@@ -164,6 +174,14 @@ Mathematical Operators
    .. Docstring generated from Julia source
 
    The quotient and remainder from Euclidean division. Equivalent to ``(div(x,y), rem(x,y))`` or ``(x÷y, x%y)``\ .
+
+   .. doctest::
+
+       julia> divrem(3,7)
+       (0,3)
+
+       julia> divrem(7,3)
+       (2,1)
 
 .. function:: fldmod(x, y)
 
@@ -762,11 +780,21 @@ Mathematical Functions
 
    Convert ``x`` from degrees to radians.
 
+   .. doctest::
+
+       julia> deg2rad(90)
+       1.5707963267948966
+
 .. function:: rad2deg(x)
 
    .. Docstring generated from Julia source
 
    Convert ``x`` from radians to degrees.
+
+   .. doctest::
+
+       julia> rad2deg(pi)
+       180.0
 
 .. function:: hypot(x, y)
 
@@ -794,6 +822,14 @@ Mathematical Functions
 
    Compute the base ``b`` logarithm of ``x``\ . Throws ``DomainError`` for negative ``Real`` arguments.
 
+   .. doctest::
+
+       julia> log(4,8)
+       1.5
+
+       julia> log(4,2)
+       0.5
+
 .. function:: log2(x)
 
    .. Docstring generated from Julia source
@@ -818,7 +854,7 @@ Mathematical Functions
 
    .. Docstring generated from Julia source
 
-   Return ``(x,exp)`` such that ``x`` has a magnitude in the interval :math:`[1/2, 1)` or 0, and val = :math:`x \times 2^{exp}`\ .
+   Return ``(x,exp)`` such that ``x`` has a magnitude in the interval :math:`[1/2, 1)` or 0, and ``val`` is equal to :math:`x \times 2^{exp}`\ .
 
 .. function:: exp(x)
 
@@ -831,6 +867,11 @@ Mathematical Functions
    .. Docstring generated from Julia source
 
    Compute :math:`2^x`\ .
+
+   .. doctest::
+
+       julia> exp2(5)
+       32.0
 
 .. function:: exp10(x)
 
@@ -849,6 +890,11 @@ Mathematical Functions
    .. Docstring generated from Julia source
 
    Return a tuple (fpart,ipart) of the fractional and integral parts of a number. Both parts have the same sign as the argument.
+
+   .. doctest::
+
+       julia> modf(3.5)
+       (0.5,3.0)
 
 .. function:: expm1(x)
 
@@ -1172,17 +1218,27 @@ Mathematical Functions
 
    Return :math:`\sqrt{x}`\ . Throws ``DomainError`` for negative ``Real`` arguments. Use complex negative arguments instead.  The prefix operator ``√`` is equivalent to ``sqrt``\ .
 
-.. function:: isqrt(n)
+.. function:: isqrt(n::Integer)
 
    .. Docstring generated from Julia source
 
    Integer square root: the largest integer ``m`` such that ``m*m <= n``\ .
+
+   .. doctest::
+
+       julia> isqrt(5)
+       2
 
 .. function:: cbrt(x)
 
    .. Docstring generated from Julia source
 
    Return :math:`x^{1/3}`\ .  The prefix operator ``∛`` is equivalent to ``cbrt``\ .
+
+   .. doctest::
+
+       julia> cbrt(big(27))
+       3.000000000000000000000000000000000000000000000000000000000000000000000000000000
 
 .. function:: erf(x)
 
@@ -1280,11 +1336,27 @@ Mathematical Functions
 
    Greatest common (positive) divisor (or zero if ``x`` and ``y`` are both zero).
 
+   .. doctest::
+
+       julia> gcd(6,9)
+       3
+
+       julia> gcd(6,-9)
+       3
+
 .. function:: lcm(x,y)
 
    .. Docstring generated from Julia source
 
    Least common (non-negative) multiple.
+
+   .. doctest::
+
+       julia> lcm(2,3)
+       6
+
+       julia> lcm(-2,3)
+       6
 
 .. function:: gcdx(x,y)
 
@@ -1306,23 +1378,44 @@ Mathematical Functions
       Bézout coefficients are *not* uniquely defined. ``gcdx`` returns the minimal Bézout coefficients that are computed by the extended Euclidean algorithm. (Ref: D. Knuth, TAoCP, 2/e, p. 325, Algorithm X.) For signed integers, these coefficients ``u`` and ``v`` are minimal in the sense that :math:`|u| < |y/d|` and :math:`|v| < |x/d|`\ . Furthermore, the signs of ``u`` and ``v`` are chosen so that ``d`` is positive. For unsigned integers, the coefficients ``u`` and ``v`` might be near their ``typemax``\ , and the identity then holds only via the unsigned integers' modulo arithmetic.
 
 
-.. function:: ispow2(n) -> Bool
+.. function:: ispow2(n::Integer) -> Bool
 
    .. Docstring generated from Julia source
 
    Test whether ``n`` is a power of two.
 
-.. function:: nextpow2(n)
+   .. doctest::
+
+       julia> ispow2(4)
+       true
+
+       julia> ispow2(5)
+       false
+
+.. function:: nextpow2(n::Integer)
 
    .. Docstring generated from Julia source
 
    The smallest power of two not less than ``n``\ . Returns 0 for ``n==0``\ , and returns ``-nextpow2(-n)`` for negative arguments.
 
-.. function:: prevpow2(n)
+   .. doctest::
+
+       julia> nextpow2(16)
+       16
+
+       julia> nextpow2(17)
+       32
+
+.. function:: prevpow2(n::Integer)
 
    .. Docstring generated from Julia source
 
    The largest power of two not greater than ``n``\ . Returns 0 for ``n==0``\ , and returns ``-prevpow2(-n)`` for negative arguments.
+
+   .. doctest::
+
+       julia> prevpow2(5)
+       4
 
 .. function:: nextpow(a, x)
 
@@ -1348,7 +1441,18 @@ Mathematical Functions
 
    Take the inverse of ``x`` modulo ``m``\ : ``y`` such that :math:`x y = 1 \pmod m`\ , with :math:`div(x,y) = 0`\ . This is undefined for :math:`m = 0`\ , or if :math:`gcd(x,m) \neq 1`\ .
 
-.. function:: powermod(x, p, m)
+   .. doctest::
+
+       julia> invmod(2,5)
+       3
+
+       julia> invmod(2,3)
+       2
+
+       julia> invmod(5,6)
+       5
+
+.. function:: powermod(x::Integer, p::Integer, m)
 
    .. Docstring generated from Julia source
 
@@ -1578,17 +1682,22 @@ Mathematical Functions
 
    Generalized zeta function :math:`\zeta(s, z)`\ , defined by the sum :math:`\sum_{k=0}^\infty ((k+z)^2)^{-s/2}`\ , where any term with :math:`k+z=0` is excluded.  For :math:`\Re z > 0`\ , this definition is equivalent to the Hurwitz zeta function :math:`\sum_{k=0}^\infty (k+z)^{-s}`\ .   For :math:`z=1`\ , it yields the Riemann zeta function :math:`\zeta(s)`\ .
 
-.. function:: ndigits(n, b = 10)
+.. function:: ndigits(n::Integer, b::Integer=10)
 
    .. Docstring generated from Julia source
 
-   Compute the number of digits in number ``n`` written in base ``b``\ .
+   Compute the number of digits in integer ``n`` written in base ``b``\ .
 
 .. function:: widemul(x, y)
 
    .. Docstring generated from Julia source
 
    Multiply ``x`` and ``y``\ , giving the result as a larger type.
+
+   .. doctest::
+
+       julia> widemul(Float32(3.), 4.)
+       1.200000000000000000000000000000000000000000000000000000000000000000000000000000e+01
 
 .. function:: @evalpoly(z, c...)
 

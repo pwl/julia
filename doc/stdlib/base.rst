@@ -370,7 +370,7 @@ All Objects
 
        julia> convert(Int, 3.5)
        ERROR: InexactError()
-        in convert(::Type{Int64}, ::Float64) at ./int.jl:239
+        in convert(::Type{Int64}, ::Float64) at ./int.jl:330
         ...
 
    If ``T`` is a :obj:`AbstractFloat` or :obj:`Rational` type, then it will return the closest value to ``x`` representable by ``T``\ .
@@ -462,6 +462,11 @@ Types
    .. Docstring generated from Julia source
 
    Return the supertype of DataType ``T``\ .
+
+   .. doctest::
+
+       julia> supertype(Int32)
+       Signed
 
 .. function:: issubtype(type1, type2)
 
@@ -744,6 +749,12 @@ Syntax
 
    Generates a gensym symbol for a variable. For example, ``@gensym x y`` is transformed into ``x = gensym("x"); y = gensym("y")``\ .
 
+.. function:: @polly
+
+   .. Docstring generated from Julia source
+
+   Tells the compiler to apply the polyhedral optimizer Polly to a function.
+
 .. function:: parse(str, start; greedy=true, raise=true)
 
    .. Docstring generated from Julia source
@@ -780,7 +791,7 @@ Nullables
 System
 ------
 
-.. function:: run(command)
+.. function:: run(command, args...)
 
    .. Docstring generated from Julia source
 
@@ -876,7 +887,7 @@ System
 
        Cmd(`echo "Hello world"`, ignorestatus=true, detach=false)
 
-.. function:: setenv(command, env; dir=working_dir)
+.. function:: setenv(command::Cmd, env; dir="")
 
    .. Docstring generated from Julia source
 
@@ -1307,11 +1318,24 @@ Reflection
 
    Get the name of a ``Module`` as a ``Symbol``\ .
 
+   .. doctest::
+
+       julia> module_name(Base.LinAlg)
+       :LinAlg
+
 .. function:: module_parent(m::Module) -> Module
 
    .. Docstring generated from Julia source
 
    Get a module's enclosing ``Module``\ . ``Main`` is its own parent, as is ``LastMain`` after ``workspace()``\ .
+
+   .. doctest::
+
+       julia> module_parent(Main)
+       Main
+
+       julia> module_parent(Base.LinAlg.BLAS)
+       Base.LinAlg
 
 .. function:: current_module() -> Module
 
@@ -1323,9 +1347,17 @@ Reflection
 
    .. Docstring generated from Julia source
 
-   Get the fully-qualified name of a module as a tuple of symbols. For example, ``fullname(Base.Pkg)`` gives ``(:Base,:Pkg)``\ , and ``fullname(Main)`` gives ``()``\ .
+   Get the fully-qualified name of a module as a tuple of symbols. For example,
 
-.. function:: names(x::Module[, all=false[, imported=false]])
+   .. doctest::
+
+       julia> fullname(Base.Pkg)
+       (:Base,:Pkg)
+
+       julia> fullname(Main)
+       ()
+
+.. function:: names(x::Module, all::Bool=false, imported::Bool=false)
 
    .. Docstring generated from Julia source
 
@@ -1343,11 +1375,26 @@ Reflection
 
    Get an array of the fields of a ``DataType``\ .
 
-.. function:: fieldname(x::DataType, i)
+   .. doctest::
+
+       julia> fieldnames(Hermitian)
+       2-element Array{Symbol,1}:
+        :data
+        :uplo
+
+.. function:: fieldname(x::DataType, i::Integer)
 
    .. Docstring generated from Julia source
 
    Get the name of field ``i`` of a ``DataType``\ .
+
+   .. doctest::
+
+       julia> fieldname(SparseMatrixCSC,1)
+       :m
+
+       julia> fieldname(SparseMatrixCSC,5)
+       :nzval
 
 .. function:: Base.datatype_module(t::DataType) -> Module
 
@@ -1365,7 +1412,7 @@ Reflection
 
    .. Docstring generated from Julia source
 
-   Determine whether a global is declared ``const`` in a given ``Module``\ . The default ``Module`` argument is ``current_module()``\ .
+   Determine whether a global is declared ``const`` in a given ``Module``\ . The default ``Module`` argument is :func:`current_module`\ .
 
 .. function:: Base.function_name(f::Function) -> Symbol
 
