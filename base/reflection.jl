@@ -270,6 +270,13 @@ fieldtype
 type_alignment(x::DataType) = (@_pure_meta; ccall(:jl_get_alignment, Csize_t, (Any,), x))
 
 # return all instances, for types that can be enumerated
+
+"""
+    instances(T::Type)
+
+Return a collection of all instances of the given type, if applicable. Mostly used for
+enumerated types (see `@enum`).
+"""
 function instances end
 
 # subtypes
@@ -289,6 +296,22 @@ function _subtypes(m::Module, x::DataType, sts=Set(), visited=Set())
     return sts
 end
 subtypes(m::Module, x::DataType) = sort(collect(_subtypes(m, x)), by=string)
+
+"""
+    subtypes(T::DataType)
+
+Return a list of immediate subtypes of DataType `T`. Note that all currently loaded subtypes
+are included, including those not visible in the current module.
+
+```jldoctest
+julia> subtypes(Integer)
+4-element Array{Any,1}:
+ BigInt
+ Bool
+ Signed
+ Unsigned
+```
+"""
 subtypes(x::DataType) = subtypes(Main, x)
 
 function to_tuple_type(t::ANY)

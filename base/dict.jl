@@ -119,7 +119,10 @@ in(k, v::KeyIterator) = !is(get(v.dict, k, secret_table_token),
 """
     keys(a::Associative)
 
-Return an iterator over all keys in a collection. `collect(keys(d))` returns an array of keys.
+Return an iterator over all keys in a collection.
+`collect(keys(d))` returns an array of keys.
+Since the keys are stored internally in a hash table,
+the order in which they are returned may vary.
 
 ```jldoctest
 julia> a = Dict('a'=>2, 'b'=>3)
@@ -139,7 +142,8 @@ eachindex(a::Associative) = KeyIterator(a)
 """
     values(a::Associative)
 
-Return an iterator over all values in a collection. `collect(values(d))` returns an array of values.
+Return an iterator over all values in a collection.
+`collect(values(d))` returns an array of values.
 
 ```jldoctest
 julia> a = Dict('a'=>2, 'b'=>3)

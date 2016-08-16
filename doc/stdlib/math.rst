@@ -135,6 +135,11 @@ Mathematical Operators
 
    Smallest integer larger than or equal to ``x/y``\ .
 
+   .. doctest::
+
+       julia> cld(5.5,2.2)
+       3.0
+
 .. function:: mod(x, y)
 
    .. Docstring generated from Julia source
@@ -840,7 +845,7 @@ Mathematical Functions
 
    .. Docstring generated from Julia source
 
-   Compute the logarithm of ``x`` to base 10. Throws ``DomainError`` for negative ``Real`` arguments.
+   Compute the logarithm of ``x`` to base 10. Throws :obj:`DomainError` for negative ``Real`` arguments.
 
 .. function:: log1p(x)
 
@@ -1049,7 +1054,7 @@ Mathematical Functions
 
    .. Docstring generated from Julia source
 
-   Rounds (in the sense of ``round``\ ) ``x`` so that there are ``digits`` significant digits, under a base ``base`` representation, default 10. E.g., ``signif(123.456, 2)`` is ``120.0``\ , and ``signif(357.913, 4, 2)`` is ``352.0``\ .
+   Rounds (in the sense of :func:`round`\ ) ``x`` so that there are ``digits`` significant digits, under a base ``base`` representation, default 10. E.g., ``signif(123.456, 2)`` is ``120.0``\ , and ``signif(357.913, 4, 2)`` is ``352.0``\ .
 
 .. function:: min(x, y, ...)
 
@@ -1750,11 +1755,15 @@ Statistics
       Julia does not ignore ``NaN`` values in the computation. For applications requiring the handling of missing data, the ``DataArrays.jl`` package is recommended.
 
 
-.. function:: var(v[, region])
+.. function:: var(v[, region]; corrected::Bool=true, mean=nothing)
 
    .. Docstring generated from Julia source
 
-   Compute the sample variance of a vector or array ``v``\ , optionally along dimensions in ``region``\ . The algorithm will return an estimator of the generative distribution's variance under the assumption that each entry of ``v`` is an IID drawn from that generative distribution. This computation is equivalent to calculating ``sumabs2(v - mean(v)) / (length(v) - 1)``\ . Note: Julia does not ignore ``NaN`` values in the computation. For applications requiring the handling of missing data, the ``DataArray`` package is recommended.
+   Compute the sample variance of a vector or array ``v``\ , optionally along dimensions in ``region``\ . The algorithm will return an estimator of the generative distribution's variance under the assumption that each entry of ``v`` is an IID drawn from that generative distribution. This computation is equivalent to calculating ``sumabs2(v - mean(v)) / (length(v) - 1)``\ . If ``corrected`` is ``true``\ , then the sum is scaled with ``n-1``\ , whereas the sum is scaled with ``n`` if ``corrected`` is ``false`` where ``n = length(x)``\ . The mean ``m`` over the region may be provided.
+
+   .. note::
+      Julia does not ignore ``NaN`` values in the computation. For applications requiring the handling of missing data, the ``DataArrays.jl`` package is recommended.
+
 
 .. function:: varm(v, m[, region]; corrected::Bool=true)
 
@@ -1821,7 +1830,7 @@ Statistics
 
    .. Docstring generated from Julia source
 
-   Like ``median``\ , but may overwrite the input vector.
+   Like :func:`median`\ , but may overwrite the input vector.
 
 .. function:: midpoints(e)
 
@@ -2142,7 +2151,7 @@ implemented by calling functions from `FFTW
 
    Same as :func:`filt` but writes the result into the ``out`` argument, which may alias the input ``x`` to modify it in-place.
 
-.. function:: deconv(b,a)
+.. function:: deconv(b,a) -> c
 
    .. Docstring generated from Julia source
 

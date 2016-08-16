@@ -12,43 +12,59 @@ Standard Numeric Types
 Data Formats
 ------------
 
-.. function:: bin(n, [pad])
+.. function:: bin(n, pad::Int=1)
 
    .. Docstring generated from Julia source
 
    Convert an integer to a binary string, optionally specifying a number of digits to pad to.
 
-.. function:: hex(n, [pad])
+   .. doctest::
+
+       julia> bin(10,2)
+       "1010"
+
+       julia> bin(10,8)
+       "00001010"
+
+.. function:: hex(n, pad::Int=1)
 
    .. Docstring generated from Julia source
 
    Convert an integer to a hexadecimal string, optionally specifying a number of digits to pad to.
 
-.. function:: dec(n, [pad])
+.. function:: dec(n, pad::Int=1)
 
    .. Docstring generated from Julia source
 
    Convert an integer to a decimal string, optionally specifying a number of digits to pad to.
 
-.. function:: oct(n, [pad])
+.. function:: oct(n, pad::Int=1)
 
    .. Docstring generated from Julia source
 
    Convert an integer to an octal string, optionally specifying a number of digits to pad to.
 
-.. function:: base(base, n, [pad])
+.. function:: base(base::Integer, n::Integer, pad::Integer=1)
 
    .. Docstring generated from Julia source
 
-   Convert an integer to a string in the given base, optionally specifying a number of digits to pad to.
+   Convert an integer ``n`` to a string in the given ``base``\ , optionally specifying a number of digits to pad to.
 
-.. function:: digits([T], n, [base], [pad])
+   .. doctest::
+
+       julia> base(13,5,4)
+       "0005"
+
+       julia> base(5,13,4)
+       "0023"
+
+.. function:: digits([T<:Integer], n::Integer, base::T=10, pad::Integer=1)
 
    .. Docstring generated from Julia source
 
    Returns an array with element type ``T`` (default ``Int``\ ) of the digits of ``n`` in the given base, optionally padded with zeros to a specified size. More significant digits are at higher indexes, such that ``n == sum([digits[k]*base^(k-1) for k=1:length(digits)])``\ .
 
-.. function:: digits!(array, n, [base])
+.. function:: digits!(array, n::Integer, base::Integer=10)
 
    .. Docstring generated from Julia source
 
@@ -70,13 +86,13 @@ Data Formats
 
    .. Docstring generated from Julia source
 
-   Like ``parse``\ , but returns a ``Nullable`` of the requested type. The result will be null if the string does not contain a valid number.
+   Like :func:`parse`\ , but returns a :obj:`Nullable` of the requested type. The result will be null if the string does not contain a valid number.
 
 .. function:: big(x)
 
    .. Docstring generated from Julia source
 
-   Convert a number to a maximum precision representation (typically ``BigInt`` or ``BigFloat``\ ). See ``BigFloat`` for information about some pitfalls with floating-point numbers.
+   Convert a number to a maximum precision representation (typically ``BigInt`` or ``BigFloat``\ ). See :obj:`BigFloat` for information about some pitfalls with floating-point numbers.
 
 .. function:: signed(x)
 
@@ -134,6 +150,11 @@ Data Formats
 
    Get a hexadecimal string of the binary representation of a floating point number.
 
+   .. doctest::
+
+       julia> num2hex(2.2)
+       "400199999999999a"
+
 .. function:: hex2num(str)
 
    .. Docstring generated from Julia source
@@ -146,11 +167,34 @@ Data Formats
 
    Convert an arbitrarily long hexadecimal string to its binary representation. Returns an ``Array{UInt8,1}``\ , i.e. an array of bytes.
 
-.. function:: bytes2hex(bin_arr::Array{UInt8, 1})
+   .. doctest::
+
+       julia> a = hex(12345)
+       "3039"
+
+       julia> hex2bytes(a)
+       2-element Array{UInt8,1}:
+        0x30
+        0x39
+
+.. function:: bytes2hex(bin_arr::Array{UInt8, 1}) -> String
 
    .. Docstring generated from Julia source
 
-   Convert an array of bytes to its hexadecimal representation. All characters are in lower-case. Returns a ``String``\ .
+   Convert an array of bytes to its hexadecimal representation. All characters are in lower-case.
+
+   .. doctest::
+
+       julia> a = hex(12345)
+       "3039"
+
+       julia> b = hex2bytes(a)
+       2-element Array{UInt8,1}:
+        0x30
+        0x39
+
+       julia> bytes2hex(b)
+       "3039"
 
 General Number Functions and Constants
 --------------------------------------
@@ -253,7 +297,15 @@ General Number Functions and Constants
 
    .. Docstring generated from Julia source
 
-   Test whether a number is finite
+   Test whether a number is finite.
+
+   .. doctest::
+
+       julia> isfinite(5)
+       true
+
+       julia> isfinite(NaN32)
+       false
 
 .. function:: isinf(f) -> Bool
 

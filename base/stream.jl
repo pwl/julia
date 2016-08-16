@@ -889,7 +889,11 @@ function bind(server::PipeServer, name::AbstractString)
     return true
 end
 
+"""
+    listen(path::AbstractString) -> PipeServer
 
+Create and listen on a named pipe / UNIX domain socket.
+"""
 function listen(path::AbstractString)
     sock = PipeServer()
     bind(sock, path) || throw(ArgumentError("could not listen on path $path"))
@@ -913,6 +917,12 @@ end
 
 # Libuv will internally reset read/writability, which is uses to
 # mark that this is an invalid pipe.
+
+"""
+    connect(path::AbstractString) -> PipeEndpoint
+
+Connect to the named pipe / UNIX domain socket at `path`.
+"""
 connect(path::AbstractString) = connect(init_pipe!(PipeEndpoint(); readable=false, writable=false, julia_only=true),path)
 
 _fd(x::IOStream) = RawFD(fd(x))
@@ -954,6 +964,35 @@ for (x, writable, unix_fd, c_symbol) in
         end
     end
 end
+
+"""
+    redirect_stdout([stream]) -> (rd, wr)
+
+Create a pipe to which all C and Julia level [`STDOUT`](:obj:`STDOUT`) output
+will be redirected.
+Returns a tuple `(rd, wr)` representing the pipe ends.
+Data written to [`STDOUT`](:obj:`STDOUT`) may now be read from the `rd` end of
+the pipe. The `wr` end is given for convenience in case the old
+[`STDOUT`](:obj:`STDOUT`) object was cached by the user and needs to be replaced
+elsewhere.
+"""
+redirect_stdout
+
+"""
+    redirect_stderr([stream]) -> (rd, wr)
+
+Like [`redirect_stdout`](:func:`redirect_stdout`), but for [`STDERR`](:obj:`STDERR`).
+"""
+redirect_stderr
+
+"""
+    redirect_stdin([stream]) -> (rd, wr)
+
+Like [`redirect_stdout`](:func:`redirect_stdout`), but for [`STDIN`](:obj:`STDIN`).
+Note that the order of the return tuple is still `(rd, wr)`,
+i.e. data to be read from [`STDIN`](:obj:`STDIN`) may be written to `wr`.
+"""
+redirect_stdin
 
 mark(x::LibuvStream)     = mark(x.buffer)
 unmark(x::LibuvStream)   = unmark(x.buffer)

@@ -145,13 +145,15 @@ Basic functions
 
    .. Docstring generated from Julia source
 
-   Counts the number of nonzero values in array ``A`` (dense or sparse). Note that this is not a constant-time operation. For sparse matrices, one should usually use ``nnz``\ , which returns the number of stored values.
+   Counts the number of nonzero values in array ``A`` (dense or sparse). Note that this is not a constant-time operation. For sparse matrices, one should usually use :func:`nnz`\ , which returns the number of stored values.
 
 .. function:: conj!(A)
 
    .. Docstring generated from Julia source
 
-   Convert an array to its complex conjugate in-place.
+   Transform an array to its complex conjugate in-place.
+
+   See also :func:`conj`\ .
 
 .. function:: stride(A, k::Integer)
 
@@ -505,13 +507,13 @@ All mathematical operations and functions are supported for arrays
 
    .. Docstring generated from Julia source
 
-   Like ``broadcast``\ , but store the result of ``broadcast(f, As...)`` in the ``dest`` array. Note that ``dest`` is only used to store the result, and does not supply arguments to ``f`` unless it is also listed in the ``As``\ , as in ``broadcast!(f, A, A, B)`` to perform ``A[:] = broadcast(f, A, B)``\ .
+   Like :func:`broadcast`\ , but store the result of ``broadcast(f, As...)`` in the ``dest`` array. Note that ``dest`` is only used to store the result, and does not supply arguments to ``f`` unless it is also listed in the ``As``\ , as in ``broadcast!(f, A, A, B)`` to perform ``A[:] = broadcast(f, A, B)``\ .
 
 .. function:: bitbroadcast(f, As...)
 
    .. Docstring generated from Julia source
 
-   Like ``broadcast``\ , but allocates a ``BitArray`` to store the result, rather then an ``Array``\ .
+   Like :func:`broadcast`\ , but allocates a ``BitArray`` to store the result, rather then an ``Array``\ .
 
    .. doctest::
 
@@ -584,13 +586,45 @@ Indexing, Assignment, and Concatenation
 
    .. Docstring generated from Julia source
 
-   Broadcasts the ``inds`` arrays to a common size like :func:`broadcast` and returns an array of the results ``A[ks...]``\ , where ``ks`` goes over the positions in the broadcast.
+   Broadcasts the ``inds`` arrays to a common size like :func:`broadcast` and returns an array of the results ``A[ks...]``\ , where ``ks`` goes over the positions in the broadcast result ``A``\ .
+
+   .. doctest::
+
+       julia> A = [1, 2, 3, 4, 5]
+       5-element Array{Int64,1}:
+        1
+        2
+        3
+        4
+        5
+
+       julia> B = [1 2; 3 4; 5 6; 7 8; 9 10]
+       5×2 Array{Int64,2}:
+        1   2
+        3   4
+        5   6
+        7   8
+        9  10
+
+       julia> C = broadcast(+,A,B)
+       5×2 Array{Int64,2}:
+         2   3
+         5   6
+         8   9
+        11  12
+        14  15
+
+       julia> broadcast_getindex(C,[1,2,10])
+       3-element Array{Int64,1}:
+         2
+         5
+        15
 
 .. function:: broadcast_setindex!(A, X, inds...)
 
    .. Docstring generated from Julia source
 
-   Broadcasts the ``X`` and ``inds`` arrays to a common size and stores the value from each position in ``X`` at the indices given by the same positions in ``inds``\ .
+   Broadcasts the ``X`` and ``inds`` arrays to a common size and stores the value from each position in ``X`` at the indices in ``A`` given by the same positions in ``inds``\ .
 
 .. function:: isassigned(array, i) -> Bool
 
@@ -1227,7 +1261,7 @@ Indexing, Assignment, and Concatenation
 
    .. Docstring generated from Julia source
 
-   Like ``randsubseq``\ , but the results are stored in ``S`` (which is resized as needed).
+   Like :func:`randsubseq`\ , but the results are stored in ``S`` (which is resized as needed).
 
 Array functions
 ---------------

@@ -40,6 +40,12 @@ Test whether a matrix is positive definite, overwriting `A` in the processes.
 isposdef!(A::StridedMatrix) = ishermitian(A) && isposdef!(A, :U)
 
 isposdef{T}(A::AbstractMatrix{T}, UL::Symbol) = (S = typeof(sqrt(one(T))); isposdef!(S == T ? copy(A) : convert(AbstractMatrix{S}, A), UL))
+
+"""
+    isposdef(A) -> Bool
+
+Test whether a matrix is positive definite.
+"""
 isposdef{T}(A::AbstractMatrix{T}) = (S = typeof(sqrt(one(T))); isposdef!(S == T ? copy(A) : convert(AbstractMatrix{S}, A)))
 isposdef(x::Number) = imag(x)==0 && real(x) > 0
 
@@ -131,21 +137,40 @@ function diagind(m::Integer, n::Integer, k::Integer=0)
 end
 
 """
-    diagind(M[, k::Integer=0])
+    diagind(M, k::Integer=0)
 
 A [`Range`](:class:`Range`) giving the indices of the `k`th diagonal of the matrix `M`.
+
+```jldoctest
+julia> A = [1 2 3; 4 5 6; 7 8 9]
+3×3 Array{Int64,2}:
+ 1  2  3
+ 4  5  6
+ 7  8  9
+
+julia> diagind(A,-1)
+2:4:6
+```
 """
 diagind(A::AbstractMatrix, k::Integer=0) = diagind(size(A,1), size(A,2), k)
 
 """
-    diag(M[, k::Integer=0])
+    diag(M, k::Integer=0)
 
-The `k`th diagonal of a matrix, as a vector. Use [`diagm`](:func:`diagm`) to construct a diagonal matrix.
+The `k`th diagonal of a matrix, as a vector.
+Use [`diagm`](:func:`diagm`) to construct a diagonal matrix.
+
+```jldoctest
+julia> diag(A,1)
+2-element Array{Int64,1}:
+ 2
+ 6
+```
 """
 diag(A::AbstractMatrix, k::Integer=0) = A[diagind(A,k)]
 
 """
-    diagm(v[, k::Integer=0])
+    diagm(v, k::Integer=0)
 
 Construct a diagonal matrix and place `v` on the `k`th diagonal.
 
@@ -176,6 +201,11 @@ function trace{T}(A::Matrix{T})
     t
 end
 
+"""
+    kron(A, B)
+
+Kronecker tensor product of two vectors or two matrices.
+"""
 function kron{T,S}(a::AbstractMatrix{T}, b::AbstractMatrix{S})
     R = Array{promote_type(T,S)}(size(a,1)*size(b,1), size(a,2)*size(b,2))
     m = 1
@@ -209,6 +239,22 @@ function ^(A::Matrix, p::Number)
 end
 
 # Matrix exponential
+
+"""
+    expm(A)
+
+Compute the matrix exponential of `A`, defined by
+
+```math
+e^A = \\sum_{n=0}^{\\infty} \\frac{A^n}{n!}.
+```
+
+For symmetric or Hermitian `A`, an eigendecomposition ([`eigfact`](:func:`eigfact`)) is
+used, otherwise the scaling and squaring algorithm (see [^H05]) is chosen.
+
+[^H05]: Nicholas J. Higham, "The squaring and scaling method for the matrix exponential revisited", SIAM Journal on Matrix Analysis and Applications, 26(4), 2005, 1179-1193. [doi:10.1137/090768539](http://dx.doi.org/10.1137/090768539)
+
+"""
 expm{T<:BlasFloat}(A::StridedMatrix{T}) = expm!(copy(A))
 expm{T<:Integer}(A::StridedMatrix{T}) = expm!(float(A))
 expm(x::Number) = exp(x)

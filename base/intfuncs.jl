@@ -425,6 +425,21 @@ function base(b::Int, x::Unsigned, pad::Int, neg::Bool)
     if neg; a[1]='-'; end
     String(a)
 end
+
+"""
+    base(base::Integer, n::Integer, pad::Integer=1)
+
+Convert an integer `n` to a string in the given `base`,
+optionally specifying a number of digits to pad to.
+
+```jldoctest
+julia> base(13,5,4)
+"0005"
+
+julia> base(5,13,4)
+"0023"
+```
+"""
 base(b::Integer, n::Integer, pad::Integer=1) = base(Int(b), unsigned(abs(n)), pad, n<0)
 
 for sym in (:bin, :oct, :dec, :hex)
@@ -438,12 +453,55 @@ for sym in (:bin, :oct, :dec, :hex)
     end
 end
 
+"""
+    bin(n, pad::Int=1)
+
+Convert an integer to a binary string, optionally specifying a number of digits to pad to.
+
+```jldoctest
+julia> bin(10,2)
+"1010"
+
+julia> bin(10,8)
+"00001010"
+```
+"""
+bin
+
+"""
+    hex(n, pad::Int=1)
+
+Convert an integer to a hexadecimal string, optionally specifying a number of digits to pad to.
+"""
+hex
+
+"""
+    oct(n, pad::Int=1)
+
+Convert an integer to an octal string, optionally specifying a number of digits to pad to.
+"""
+oct
+
+"""
+    dec(n, pad::Int=1)
+
+Convert an integer to a decimal string, optionally specifying a number of digits to pad to.
+"""
+dec
+
 bits(x::Union{Bool,Int8,UInt8})           = bin(reinterpret(UInt8,x),8)
 bits(x::Union{Int16,UInt16,Float16})      = bin(reinterpret(UInt16,x),16)
 bits(x::Union{Char,Int32,UInt32,Float32}) = bin(reinterpret(UInt32,x),32)
 bits(x::Union{Int64,UInt64,Float64})      = bin(reinterpret(UInt64,x),64)
 bits(x::Union{Int128,UInt128})            = bin(reinterpret(UInt128,x),128)
 
+"""
+    digits([T<:Integer], n::Integer, base::T=10, pad::Integer=1)
+
+Returns an array with element type `T` (default `Int`) of the digits of `n` in the given
+base, optionally padded with zeros to a specified size. More significant digits are at
+higher indexes, such that `n == sum([digits[k]*base^(k-1) for k=1:length(digits)])`.
+"""
 digits{T<:Integer}(n::Integer, base::T=10, pad::Integer=1) = digits(T, n, base, pad)
 
 function digits{T<:Integer}(::Type{T}, n::Integer, base::Integer=10, pad::Integer=1)
@@ -451,6 +509,13 @@ function digits{T<:Integer}(::Type{T}, n::Integer, base::Integer=10, pad::Intege
     digits!(zeros(T, max(pad, ndigits0z(n,base))), n, base)
 end
 
+"""
+    digits!(array, n::Integer, base::Integer=10)
+
+Fills an array of the digits of `n` in the given base. More significant digits are at higher
+indexes. If the array length is insufficient, the least significant digits are filled up to
+the array length. If the array length is excessive, the excess portion is filled with zeros.
+"""
 function digits!{T<:Integer}(a::AbstractArray{T,1}, n::Integer, base::Integer=10)
     2 <= base || throw(ArgumentError("base must be ≥ 2, got $base"))
     base - 1 <= typemax(T) || throw(ArgumentError("type $T too small for base $base"))

@@ -5,7 +5,9 @@
 """
     conj!(A)
 
-Convert an array to its complex conjugate in-place.
+Transform an array to its complex conjugate in-place.
+
+See also [`conj`](:func:`conj`).
 """
 function conj!{T<:Number}(A::AbstractArray{T})
     for i in eachindex(A)

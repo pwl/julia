@@ -13,7 +13,7 @@ Standard Functions
 
 Linear algebra functions in Julia are largely implemented by calling functions from `LAPACK <http://www.netlib.org/lapack/>`_.  Sparse factorizations call functions from `SuiteSparse <http://faculty.cse.tamu.edu/davis/suitesparse.html>`_.
 
-.. function:: *(A, B)
+.. function:: *(A::AbstractMatrix, B::AbstractMatrix)
 
    .. Docstring generated from Julia source
 
@@ -586,7 +586,7 @@ Linear algebra functions in Julia are largely implemented by calling functions f
 
    .. Docstring generated from Julia source
 
-   Compute the Bunch-Kaufman [Bunch1977]_ factorization of a real symmetric or complex Hermitian matrix ``A`` and return a ``BunchKaufman`` object. The following functions are available for ``BunchKaufman`` objects: ``size``\ , ``\``\ , ``inv``\ , ``issymmetric``\ , ``ishermitian``\ .
+   Compute the Bunch-Kaufman [Bunch1977]_ factorization of a real symmetric or complex Hermitian matrix ``A`` and return a ``BunchKaufman`` object. The following functions are available for ``BunchKaufman`` objects: :func:`size`\ , ``\``\ , :func:`inv`\ , :func:`issymmetric`\ , :func:`ishermitian`\ .
 
    .. [Bunch1977] J R Bunch and L Kaufman, Some stable methods for calculating inertia and solving symmetric linear systems, Mathematics of Computation 31:137 (1977), 163-179. `url <http://www.ams.org/journals/mcom/1977-31-137/S0025-5718-1977-0428694-0>`_\ .
 
@@ -1101,19 +1101,37 @@ Linear algebra functions in Julia are largely implemented by calling functions f
 
    Returns the lower triangle of ``M`` starting from the ``k``\ th superdiagonal, overwriting ``M`` in the process.
 
-.. function:: diagind(M[, k::Integer=0])
+.. function:: diagind(M, k::Integer=0)
 
    .. Docstring generated from Julia source
 
    A :class:`Range` giving the indices of the ``k``\ th diagonal of the matrix ``M``\ .
 
-.. function:: diag(M[, k::Integer=0])
+   .. doctest::
+
+       julia> A = [1 2 3; 4 5 6; 7 8 9]
+       3×3 Array{Int64,2}:
+        1  2  3
+        4  5  6
+        7  8  9
+
+       julia> diagind(A,-1)
+       2:4:6
+
+.. function:: diag(M, k::Integer=0)
 
    .. Docstring generated from Julia source
 
    The ``k``\ th diagonal of a matrix, as a vector. Use :func:`diagm` to construct a diagonal matrix.
 
-.. function:: diagm(v[, k::Integer=0])
+   .. doctest::
+
+       julia> diag(A,1)
+       2-element Array{Int64,1}:
+        2
+        6
+
+.. function:: diagm(v, k::Integer=0)
 
    .. Docstring generated from Julia source
 

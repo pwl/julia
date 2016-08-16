@@ -745,8 +745,9 @@ const _default_splice = []
 """
     splice!(a::Vector, index::Integer, [replacement]) -> item
 
-Remove the item at the given index, and return the removed item. Subsequent items are
-shifted down to fill the resulting gap. If specified, replacement values from an ordered
+Remove the item at the given index, and return the removed item.
+Subsequent items are shifted left to fill the resulting gap.
+If specified, replacement values from an ordered
 collection will be spliced in place of the removed item.
 
 ```jldoctest
@@ -810,9 +811,11 @@ end
 """
     splice!(a::Vector, range, [replacement]) -> items
 
-Remove items in the specified index range, and return a collection containing the removed
-items. Subsequent items are shifted down to fill the resulting gap. If specified,
-replacement values from an ordered collection will be spliced in place of the removed items.
+Remove items in the specified index range, and return a collection containing
+the removed items.
+Subsequent items are shifted left to fill the resulting gap.
+If specified, replacement values from an ordered collection will be spliced in
+place of the removed items.
 
 To insert `replacement` before an index `n` without removing any items, use
 `splice!(collection, n:n-1, replacement)`.

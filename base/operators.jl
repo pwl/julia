@@ -438,6 +438,16 @@ julia> fld(7.3,5.5)
 ```
 """
 fld{T<:Real}(x::T, y::T) = convert(T,round((x-mod(x,y))/y))
+
+"""
+    cld(x, y)
+
+Smallest integer larger than or equal to `x/y`.
+```jldoctest
+julia> cld(5.5,2.2)
+3.0
+```
+"""
 cld{T<:Real}(x::T, y::T) = convert(T,round((x-modCeil(x,y))/y))
 #rem{T<:Real}(x::T, y::T) = convert(T,x-y*trunc(x/y))
 #mod{T<:Real}(x::T, y::T) = convert(T,x-y*floor(x/y))
